@@ -9,13 +9,33 @@ puts "Exercise 6"
 puts "----------"
 
 class Store
+  #associations
   has_many :employees
+
+  #validations exercise 7
+  validates :name, length: {minimum: 3}
+  validates :annual_revenue, numericality: {integer: true, greater_than: 0}
 end
 
 class Employee
+  #associations
   belongs_to :store
-end
 
+  #validation exercise 7
+  validates :first_name, :last_name, presence: true
+  validates :hourly_rate, numericality: {in: [40, 200], integer: true}
+  validates_associated :store
+
+  #callback exercise 8
+  before_create :password_set
+
+  private
+  def password_set
+    word = (0...8).map { (65 + rand(26)).chr }.join
+    self.password = word
+  end
+
+end
 
 @store1.employees.create(first_name: "Khurram", last_name: "Virani", hourly_rate: 60)
 @store1.employees.create(first_name: "Lisa", last_name: "C", hourly_rate: 50)
